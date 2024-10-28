@@ -39,7 +39,11 @@ app.post("/users/create", async (req, res) => {
   const occupation = req.body.occupation;
   let newsletter = req.body.newsletter;
 
-  newsletter = newsletter === "on";
+  if (req.body.newsletter === "on") {
+    newsletter = true;
+  } else {
+    newsletter = false;
+  }
 
   await User.create({ name, occupation, newsletter });
 
@@ -54,4 +58,34 @@ app.post("/users/delete/:id", async (req, res) => {
   res.redirect("/");
 });
 
+app.get("/users/edit/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const user = await User.findOne({ raw: true, where: { id: id } });
+
+  res.render("useredit", { user });
+});
+
+app.post("/users/update", async (req, res) => {
+  const id = req.body.id;
+  const name = req.body.name;
+  const occupation = req.body.occupation;
+  let newsletter = req.body.newsletter;
+
+  if (req.body.newsletter === "on") {
+    newsletter = true;
+  } else {
+    newsletter = false;
+  }
+
+  const userData = {
+    id,
+    name,
+    occupation,
+    newsletter,
+  };
+  await User.update(userData, { where: { id: id } });
+
+  res.redirect("/");
+});
 module.exports = app;
