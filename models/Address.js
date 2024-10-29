@@ -19,7 +19,9 @@ const Address = db.define("Address", {
   },
 });
 
-User.hasMany(Address);
+User.hasMany(Address, {
+  onDelete: "CASCADE",
+});
 Address.belongsTo(User);
 
 module.exports = Address;
