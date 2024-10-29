@@ -3,6 +3,7 @@ const exphbs = require("express-handlebars");
 const connect = require("./db");
 
 const User = require("./models/User");
+const Address = require("./models/Address");
 
 const app = express();
 
@@ -88,4 +89,23 @@ app.post("/users/update", async (req, res) => {
 
   res.redirect("/");
 });
+
+app.post("/address/create", async (req, res) => {
+  const UserId = req.body.UserId;
+  const street = req.body.street;
+  const number = req.body.number;
+  const city = req.body.city;
+
+  const address = {
+    UserId,
+    street,
+    number,
+    city,
+  };
+
+  await Address.create(address);
+
+  res.redirect(`/users/edit/${UserId}`);
+});
+
 module.exports = app;
